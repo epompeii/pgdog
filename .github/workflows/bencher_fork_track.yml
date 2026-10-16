@@ -70,7 +70,7 @@ jobs:
         # This will run one test per job (all in parallel).
         # 
         # It'll error if a test's throughput is more than 1% BELOW, or PgDog CPU time per transaction
-        # (cpu-per-txn) is more than 1% ABOVE the mean of the baseline's previous runs (main)
+        # (cpu-per-txn) is more than 1% ABOVE the mean of the last 10 runs on main
         #
         # After testing 5x back-to-back, variance was <1%. This should be enough
         # of a difference, unless something goes on with their servers in the future.
@@ -96,14 +96,17 @@ jobs:
             --threshold-test percentage \
             --threshold-lower-boundary 0.01 \
             --threshold-upper-boundary _ \
+            --threshold-max-sample-size 10 \
             --threshold-measure cpu-per-txn \
             --threshold-test percentage \
             --threshold-lower-boundary _ \
             --threshold-upper-boundary 0.01 \
+            --threshold-max-sample-size 10 \
             --threshold-measure ctx-switches-per-txn \
             --threshold-test percentage \
             --threshold-lower-boundary _ \
             --threshold-upper-boundary 0.10 \
+            --threshold-max-sample-size 10 \
             --thresholds-reset \
             --error-on-alert \
             --github-actions '${{ secrets.GITHUB_TOKEN }}' \
